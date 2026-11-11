@@ -1,0 +1,27 @@
+# 必须配合独立 -p 项目名和 --env-file 使用；端口列表替换，避免合并进原生端口。
+services:
+  db:
+    ports: !override ["127.0.0.1:${TEAGENEQA_DB_PORT:?独立测试端口}:5432"]
+    cpus: 1.5
+    mem_limit: 2g
+    restart: "no"
+  migrate:
+    image: teageneqa:v1.1-quality
+    cpus: 1
+    mem_limit: 512m
+  importer:
+    image: teageneqa:v1.1-quality
+    cpus: 1
+    mem_limit: 1g
+  api:
+    image: teageneqa:v1.1-quality
+    ports: !override ["127.0.0.1:${TEAGENEQA_API_PORT:?独立测试端口}:8000"]
+    environment:
+      TEAGENEQA_TIMING: "1"
+    cpus: 1
+    mem_limit: 768m
+  web:
+    image: teageneqa:v1.1-quality
+    ports: !override ["127.0.0.1:${TEAGENEQA_WEB_PORT:?独立测试端口}:8501"]
+    cpus: 0.5
+    mem_limit: 512m

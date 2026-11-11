@@ -1,0 +1,254 @@
+{
+  "format_version": 1,
+  "context": {
+    "key": "tpia_css_audit_snapshot_20261103",
+    "label": "导师提供 CSS 数据快照（参考版本待确认）",
+    "metadata": {
+      "source_genome_code_raw": "3",
+      "species": null,
+      "cultivar": null,
+      "assembly_accession": null,
+      "assembly_version": null,
+      "annotation_release": null,
+      "snapshot_description": "2026-11-03 本地审计快照；日期不是生物数据发布日期",
+      "mapping_anchor_namespace": "SCZV2"
+    }
+  },
+  "raw_dir": "../data/raw",
+  "files": [
+    {
+      "path": "tpia_annoblastpdetail_css.csv",
+      "kind": "blast",
+      "dataset_code": "",
+      "expected_sha256": "79b1a3a616d6c39fd586337116a9b892b56b49f59adf8567c256364b699161f6",
+      "metadata": {
+        "source_url": null,
+        "data_release": null,
+        "unit": null,
+        "normalization": null,
+        "experimental_condition": null
+      }
+    },
+    {
+      "path": "tpia_annopfamdetail_css.csv",
+      "kind": "domain",
+      "dataset_code": "",
+      "expected_sha256": "7049e2d1a07ecf84dbab057e850720d4efe64aca41a0437a47846b1de5bda16a",
+      "metadata": {
+        "source_url": null,
+        "data_release": null,
+        "unit": null,
+        "normalization": null,
+        "experimental_condition": null
+      }
+    },
+    {
+      "path": "tpia_ca_public_co_css.csv",
+      "kind": "network",
+      "dataset_code": "ca_public",
+      "expected_sha256": "1012de242ac912052f715be411e032a703b038cb43ca1852d429f9f78461366b",
+      "metadata": {
+        "source_url": null,
+        "data_release": null,
+        "unit": null,
+        "normalization": null,
+        "experimental_condition": null
+      }
+    },
+    {
+      "path": "tpia_chrom_sequence_css.csv",
+      "kind": "sequence",
+      "dataset_code": "",
+      "expected_sha256": "e4ba8423ad32377e3183fe1d3ce98479c5a91ec045985cda6f09c1fc4d34458c",
+      "metadata": {
+        "source_url": null,
+        "data_release": null,
+        "unit": null,
+        "normalization": null,
+        "experimental_condition": null
+      }
+    },
+    {
+      "path": "tpia_chrom_tag_css.csv",
+      "kind": "catalog",
+      "dataset_code": "",
+      "expected_sha256": "c4755139ea326db2d1a75c53a8ba4dcfb1f3b4c7b7c71d6a1bb81600a8d1ed30",
+      "metadata": {
+        "source_url": null,
+        "data_release": null,
+        "unit": null,
+        "normalization": null,
+        "experimental_condition": null
+      }
+    },
+    {
+      "path": "tpia_ectropis_co_css.csv",
+      "kind": "network",
+      "dataset_code": "ectropis",
+      "expected_sha256": "cb4324d4e0eca55fe7001b033eec50c3004bb5ed41a0a044448797ae49458451",
+      "metadata": {
+        "source_url": null,
+        "data_release": null,
+        "unit": null,
+        "normalization": null,
+        "experimental_condition": null
+      }
+    },
+    {
+      "path": "tpia_eight_tissue_co_css.csv",
+      "kind": "network",
+      "dataset_code": "eight_tissue",
+      "expected_sha256": "70175a1870d23e121db770be1ca08cdb9f5ecfd6c8b5256040663a166a7e2c9f",
+      "metadata": {
+        "source_url": null,
+        "data_release": null,
+        "unit": null,
+        "normalization": null,
+        "experimental_condition": null
+      }
+    },
+    {
+      "path": "tpia_gene_annotation_css.csv",
+      "kind": "annotation",
+      "dataset_code": "",
+      "expected_sha256": "648710a13fe53bd37db4620f0171b13f7faa9d298731e42d4767b35c8c0b17a8",
+      "metadata": {
+        "source_url": null,
+        "data_release": null,
+        "unit": null,
+        "normalization": null,
+        "experimental_condition": null
+      }
+    },
+    {
+      "path": "tpia_gene_expro_css.csv",
+      "kind": "expression",
+      "dataset_code": "",
+      "expected_sha256": "ee03d3eff4b00b0061d6e332c134f9550b93c7f7a2f31c4e909b9a6f7934e338",
+      "metadata": {
+        "source_url": null,
+        "data_release": null,
+        "unit": null,
+        "normalization": null,
+        "experimental_condition": null
+      }
+    },
+    {
+      "path": "tpia_gene_id_convert_css.csv",
+      "kind": "mapping",
+      "dataset_code": "",
+      "expected_sha256": "122d3e0f23fedc2960499e90843af9392818d3a0e3f9c5fc0fa60f3e9bd60200",
+      "metadata": {
+        "source_url": null,
+        "data_release": null,
+        "unit": null,
+        "normalization": null,
+        "experimental_condition": null
+      }
+    },
+    {
+      "path": "tpia_grayblight_co_css.csv",
+      "kind": "network",
+      "dataset_code": "grayblight",
+      "expected_sha256": "7495f72907a63a9ac789cd1bf5583efa0c681c2c077ba766fc98310dd084c4cf",
+      "metadata": {
+        "source_url": null,
+        "data_release": null,
+        "unit": null,
+        "normalization": null,
+        "experimental_condition": null
+      }
+    },
+    {
+      "path": "tpia_leafhopper_co_css.csv",
+      "kind": "network",
+      "dataset_code": "leafhopper",
+      "expected_sha256": "81facff236810645db9d2a71e02d8391bb336e3882229836d5db5ba57ed6d15c",
+      "metadata": {
+        "source_url": null,
+        "data_release": null,
+        "unit": null,
+        "normalization": null,
+        "experimental_condition": null
+      }
+    },
+    {
+      "path": "tpia_leafposition_co_css.csv",
+      "kind": "network",
+      "dataset_code": "leafposition",
+      "expected_sha256": "112f5d66e944c60fa1a3915d50a2dbebf2f5f02fddae5fecef80316948b9c18b",
+      "metadata": {
+        "source_url": null,
+        "data_release": null,
+        "unit": null,
+        "normalization": null,
+        "experimental_condition": null
+      }
+    },
+    {
+      "path": "tpia_meja_co_css.csv",
+      "kind": "network",
+      "dataset_code": "meja",
+      "expected_sha256": "ba7d8bd68170badae07c2ab46fc5a66efb1f4866049b21f62ed62fb55c26d10c",
+      "metadata": {
+        "source_url": null,
+        "data_release": null,
+        "unit": null,
+        "normalization": null,
+        "experimental_condition": null
+      }
+    },
+    {
+      "path": "tpia_naci_co_css.csv",
+      "kind": "network",
+      "dataset_code": "naci",
+      "expected_sha256": "1d12de8974741a271bbfcf0498b3bfb6b4dc7f013888b57c42ccf4ba1e6ac199",
+      "metadata": {
+        "source_url": null,
+        "data_release": null,
+        "unit": null,
+        "normalization": null,
+        "experimental_condition": null
+      }
+    },
+    {
+      "path": "tpia_peg_co_css.csv",
+      "kind": "network",
+      "dataset_code": "peg",
+      "expected_sha256": "0ac145849a2156ed7736100e0ddaebce73c20c27e665e169fcc28675425d5598",
+      "metadata": {
+        "source_url": null,
+        "data_release": null,
+        "unit": null,
+        "normalization": null,
+        "experimental_condition": null
+      }
+    },
+    {
+      "path": "tpia_shadding_co_css.csv",
+      "kind": "network",
+      "dataset_code": "shadding",
+      "expected_sha256": "e8549641b9a3f3ff9361a8a8b64645ff0d93866bde7c72d98df0a2106c7aa05e",
+      "metadata": {
+        "source_url": null,
+        "data_release": null,
+        "unit": null,
+        "normalization": null,
+        "experimental_condition": null
+      }
+    },
+    {
+      "path": "tpia_tfactor_css.csv",
+      "kind": "factor",
+      "dataset_code": "",
+      "expected_sha256": "feba602b954a6e6bd0c9b934ae281df313285b604813e215463a57d2427b1ab2",
+      "metadata": {
+        "source_url": null,
+        "data_release": null,
+        "unit": null,
+        "normalization": null,
+        "experimental_condition": null
+      }
+    }
+  ]
+}

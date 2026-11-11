@@ -1,0 +1,9 @@
+fastapi==0.139.2
+SQLAlchemy==2.0.51
+psycopg[binary]==3.3.8
+alembic==1.20.1
+pydantic==2.13.4
+streamlit==1.67.0
+uvicorn==0.51.0
+httpx==0.28.1
+requests==2.34.2

@@ -1,0 +1,1660 @@
+{
+  "schema_version": "1.1",
+  "external_model_enabled": false,
+  "result_envelope_schema": {
+    "$defs": {
+      "ToolError": {
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          },
+          "details": {
+            "default": null,
+            "title": "Details"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ],
+        "title": "ToolError",
+        "type": "object"
+      }
+    },
+    "properties": {
+      "tool": {
+        "title": "Tool",
+        "type": "string"
+      },
+      "status": {
+        "enum": [
+          "ok",
+          "empty",
+          "ambiguous",
+          "not_found",
+          "invalid_arguments",
+          "unavailable",
+          "unknown_tool",
+          "insufficient_evidence"
+        ],
+        "title": "Status",
+        "type": "string"
+      },
+      "data": {
+        "anyOf": [
+          {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "title": "Data"
+      },
+      "error": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/ToolError"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "evidence_policy": {
+        "additionalProperties": true,
+        "title": "Evidence Policy",
+        "type": "object"
+      }
+    },
+    "required": [
+      "tool",
+      "status",
+      "data",
+      "evidence_policy"
+    ],
+    "title": "ToolResult",
+    "type": "object"
+  },
+  "tools": [
+    {
+      "type": "function",
+      "function": {
+        "name": "get_gene_profile",
+        "description": "汇总已有多源记录；默认不返回长序列，不进行功能推断。",
+        "parameters": {
+          "additionalProperties": false,
+          "properties": {
+            "gene_id": {
+              "pattern": "^CSS[0-9]{7}$",
+              "title": "Gene Id",
+              "type": "string"
+            },
+            "context_key": {
+              "anyOf": [
+                {
+                  "pattern": "^[A-Za-z0-9_.-]{1,128}$",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Context Key"
+            },
+            "limit": {
+              "default": 20,
+              "maximum": 50,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            },
+            "offset": {
+              "default": 0,
+              "maximum": 1000000,
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "gene_id"
+          ],
+          "title": "GeneArguments",
+          "type": "object"
+        }
+      },
+      "data_schema": {
+        "$defs": {
+          "EvidenceItem": {
+            "properties": {
+              "raw_fields": {
+                "additionalProperties": {
+                  "type": "string"
+                },
+                "title": "Raw Fields",
+                "type": "object"
+              },
+              "evidence_class": {
+                "title": "Evidence Class",
+                "type": "string"
+              },
+              "lexical_status": {
+                "title": "Lexical Status",
+                "type": "string"
+              },
+              "semantic_status": {
+                "title": "Semantic Status",
+                "type": "string"
+              },
+              "provenance": {
+                "$ref": "#/$defs/Provenance"
+              }
+            },
+            "required": [
+              "raw_fields",
+              "evidence_class",
+              "lexical_status",
+              "semantic_status",
+              "provenance"
+            ],
+            "title": "EvidenceItem",
+            "type": "object"
+          },
+          "EvidencePage": {
+            "properties": {
+              "gene_id": {
+                "title": "Gene Id",
+                "type": "string"
+              },
+              "context_key": {
+                "title": "Context Key",
+                "type": "string"
+              },
+              "total": {
+                "title": "Total",
+                "type": "integer"
+              },
+              "limit": {
+                "title": "Limit",
+                "type": "integer"
+              },
+              "offset": {
+                "title": "Offset",
+                "type": "integer"
+              },
+              "items": {
+                "items": {
+                  "$ref": "#/$defs/EvidenceItem"
+                },
+                "title": "Items",
+                "type": "array"
+              },
+              "source_file_count": {
+                "title": "Source File Count",
+                "type": "integer"
+              },
+              "limitations": {
+                "items": {
+                  "type": "string"
+                },
+                "title": "Limitations",
+                "type": "array"
+              }
+            },
+            "required": [
+              "gene_id",
+              "context_key",
+              "total",
+              "limit",
+              "offset",
+              "items",
+              "source_file_count"
+            ],
+            "title": "EvidencePage",
+            "type": "object"
+          },
+          "GeneView": {
+            "properties": {
+              "gene_id": {
+                "title": "Gene Id",
+                "type": "string"
+              },
+              "context_key": {
+                "title": "Context Key",
+                "type": "string"
+              },
+              "context_label": {
+                "title": "Context Label",
+                "type": "string"
+              },
+              "reference_metadata": {
+                "additionalProperties": true,
+                "title": "Reference Metadata",
+                "type": "object"
+              },
+              "semantic_status": {
+                "title": "Semantic Status",
+                "type": "string"
+              },
+              "raw_fields": {
+                "additionalProperties": {
+                  "type": "string"
+                },
+                "title": "Raw Fields",
+                "type": "object"
+              },
+              "provenance": {
+                "$ref": "#/$defs/Provenance"
+              }
+            },
+            "required": [
+              "gene_id",
+              "context_key",
+              "context_label",
+              "reference_metadata",
+              "semantic_status",
+              "raw_fields",
+              "provenance"
+            ],
+            "title": "GeneView",
+            "type": "object"
+          },
+          "Provenance": {
+            "properties": {
+              "source_file_id": {
+                "title": "Source File Id",
+                "type": "integer"
+              },
+              "filename": {
+                "title": "Filename",
+                "type": "string"
+              },
+              "file_sha256": {
+                "title": "File Sha256",
+                "type": "string"
+              },
+              "import_batch_id": {
+                "title": "Import Batch Id",
+                "type": "integer"
+              },
+              "record_no": {
+                "title": "Record No",
+                "type": "integer"
+              },
+              "source_row_id": {
+                "title": "Source Row Id",
+                "type": "string"
+              },
+              "context_key": {
+                "title": "Context Key",
+                "type": "string"
+              },
+              "record_url": {
+                "title": "Record Url",
+                "type": "string"
+              }
+            },
+            "required": [
+              "source_file_id",
+              "filename",
+              "file_sha256",
+              "import_batch_id",
+              "record_no",
+              "source_row_id",
+              "context_key",
+              "record_url"
+            ],
+            "title": "Provenance",
+            "type": "object"
+          }
+        },
+        "properties": {
+          "gene": {
+            "$ref": "#/$defs/GeneView"
+          },
+          "evidence": {
+            "additionalProperties": {
+              "$ref": "#/$defs/EvidencePage"
+            },
+            "title": "Evidence",
+            "type": "object"
+          },
+          "sequence_records": {
+            "title": "Sequence Records",
+            "type": "integer"
+          },
+          "experimental_validation_status": {
+            "const": "not_provided",
+            "default": "not_provided",
+            "title": "Experimental Validation Status",
+            "type": "string"
+          },
+          "limitations": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Limitations",
+            "type": "array"
+          }
+        },
+        "required": [
+          "gene",
+          "evidence",
+          "sequence_records",
+          "limitations"
+        ],
+        "title": "ProfileView",
+        "type": "object"
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "get_gene_annotations",
+        "description": "查询已有 GO/KO 计算注释，不代表实验功能证明。",
+        "parameters": {
+          "additionalProperties": false,
+          "properties": {
+            "gene_id": {
+              "pattern": "^CSS[0-9]{7}$",
+              "title": "Gene Id",
+              "type": "string"
+            },
+            "context_key": {
+              "anyOf": [
+                {
+                  "pattern": "^[A-Za-z0-9_.-]{1,128}$",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Context Key"
+            },
+            "limit": {
+              "default": 20,
+              "maximum": 50,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            },
+            "offset": {
+              "default": 0,
+              "maximum": 1000000,
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            },
+            "annotation_type": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "Cellular Component",
+                    "Molecular Function",
+                    "Biological Process",
+                    "Kegg Orthology"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Annotation Type"
+            }
+          },
+          "required": [
+            "gene_id"
+          ],
+          "title": "AnnotationArguments",
+          "type": "object"
+        }
+      },
+      "data_schema": {
+        "$defs": {
+          "EvidenceItem": {
+            "properties": {
+              "raw_fields": {
+                "additionalProperties": {
+                  "type": "string"
+                },
+                "title": "Raw Fields",
+                "type": "object"
+              },
+              "evidence_class": {
+                "title": "Evidence Class",
+                "type": "string"
+              },
+              "lexical_status": {
+                "title": "Lexical Status",
+                "type": "string"
+              },
+              "semantic_status": {
+                "title": "Semantic Status",
+                "type": "string"
+              },
+              "provenance": {
+                "$ref": "#/$defs/Provenance"
+              }
+            },
+            "required": [
+              "raw_fields",
+              "evidence_class",
+              "lexical_status",
+              "semantic_status",
+              "provenance"
+            ],
+            "title": "EvidenceItem",
+            "type": "object"
+          },
+          "Provenance": {
+            "properties": {
+              "source_file_id": {
+                "title": "Source File Id",
+                "type": "integer"
+              },
+              "filename": {
+                "title": "Filename",
+                "type": "string"
+              },
+              "file_sha256": {
+                "title": "File Sha256",
+                "type": "string"
+              },
+              "import_batch_id": {
+                "title": "Import Batch Id",
+                "type": "integer"
+              },
+              "record_no": {
+                "title": "Record No",
+                "type": "integer"
+              },
+              "source_row_id": {
+                "title": "Source Row Id",
+                "type": "string"
+              },
+              "context_key": {
+                "title": "Context Key",
+                "type": "string"
+              },
+              "record_url": {
+                "title": "Record Url",
+                "type": "string"
+              }
+            },
+            "required": [
+              "source_file_id",
+              "filename",
+              "file_sha256",
+              "import_batch_id",
+              "record_no",
+              "source_row_id",
+              "context_key",
+              "record_url"
+            ],
+            "title": "Provenance",
+            "type": "object"
+          }
+        },
+        "properties": {
+          "gene_id": {
+            "title": "Gene Id",
+            "type": "string"
+          },
+          "context_key": {
+            "title": "Context Key",
+            "type": "string"
+          },
+          "total": {
+            "title": "Total",
+            "type": "integer"
+          },
+          "limit": {
+            "title": "Limit",
+            "type": "integer"
+          },
+          "offset": {
+            "title": "Offset",
+            "type": "integer"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/$defs/EvidenceItem"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "source_file_count": {
+            "title": "Source File Count",
+            "type": "integer"
+          },
+          "limitations": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Limitations",
+            "type": "array"
+          }
+        },
+        "required": [
+          "gene_id",
+          "context_key",
+          "total",
+          "limit",
+          "offset",
+          "items",
+          "source_file_count"
+        ],
+        "title": "EvidencePage",
+        "type": "object"
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "get_blast_hits",
+        "description": "查询已有序列相似性命中，保留原始指标；不确证正交或功能。",
+        "parameters": {
+          "additionalProperties": false,
+          "properties": {
+            "gene_id": {
+              "pattern": "^CSS[0-9]{7}$",
+              "title": "Gene Id",
+              "type": "string"
+            },
+            "context_key": {
+              "anyOf": [
+                {
+                  "pattern": "^[A-Za-z0-9_.-]{1,128}$",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Context Key"
+            },
+            "limit": {
+              "default": 20,
+              "maximum": 50,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            },
+            "offset": {
+              "default": 0,
+              "maximum": 1000000,
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "gene_id"
+          ],
+          "title": "GeneArguments",
+          "type": "object"
+        }
+      },
+      "data_schema": {
+        "$defs": {
+          "EvidenceItem": {
+            "properties": {
+              "raw_fields": {
+                "additionalProperties": {
+                  "type": "string"
+                },
+                "title": "Raw Fields",
+                "type": "object"
+              },
+              "evidence_class": {
+                "title": "Evidence Class",
+                "type": "string"
+              },
+              "lexical_status": {
+                "title": "Lexical Status",
+                "type": "string"
+              },
+              "semantic_status": {
+                "title": "Semantic Status",
+                "type": "string"
+              },
+              "provenance": {
+                "$ref": "#/$defs/Provenance"
+              }
+            },
+            "required": [
+              "raw_fields",
+              "evidence_class",
+              "lexical_status",
+              "semantic_status",
+              "provenance"
+            ],
+            "title": "EvidenceItem",
+            "type": "object"
+          },
+          "Provenance": {
+            "properties": {
+              "source_file_id": {
+                "title": "Source File Id",
+                "type": "integer"
+              },
+              "filename": {
+                "title": "Filename",
+                "type": "string"
+              },
+              "file_sha256": {
+                "title": "File Sha256",
+                "type": "string"
+              },
+              "import_batch_id": {
+                "title": "Import Batch Id",
+                "type": "integer"
+              },
+              "record_no": {
+                "title": "Record No",
+                "type": "integer"
+              },
+              "source_row_id": {
+                "title": "Source Row Id",
+                "type": "string"
+              },
+              "context_key": {
+                "title": "Context Key",
+                "type": "string"
+              },
+              "record_url": {
+                "title": "Record Url",
+                "type": "string"
+              }
+            },
+            "required": [
+              "source_file_id",
+              "filename",
+              "file_sha256",
+              "import_batch_id",
+              "record_no",
+              "source_row_id",
+              "context_key",
+              "record_url"
+            ],
+            "title": "Provenance",
+            "type": "object"
+          }
+        },
+        "properties": {
+          "gene_id": {
+            "title": "Gene Id",
+            "type": "string"
+          },
+          "context_key": {
+            "title": "Context Key",
+            "type": "string"
+          },
+          "total": {
+            "title": "Total",
+            "type": "integer"
+          },
+          "limit": {
+            "title": "Limit",
+            "type": "integer"
+          },
+          "offset": {
+            "title": "Offset",
+            "type": "integer"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/$defs/EvidenceItem"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "source_file_count": {
+            "title": "Source File Count",
+            "type": "integer"
+          },
+          "limitations": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Limitations",
+            "type": "array"
+          }
+        },
+        "required": [
+          "gene_id",
+          "context_key",
+          "total",
+          "limit",
+          "offset",
+          "items",
+          "source_file_count"
+        ],
+        "title": "EvidencePage",
+        "type": "object"
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "get_protein_domains",
+        "description": "查询 PFAM/IPR 原始注释，保留方法与合法重复记录。",
+        "parameters": {
+          "additionalProperties": false,
+          "properties": {
+            "gene_id": {
+              "pattern": "^CSS[0-9]{7}$",
+              "title": "Gene Id",
+              "type": "string"
+            },
+            "context_key": {
+              "anyOf": [
+                {
+                  "pattern": "^[A-Za-z0-9_.-]{1,128}$",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Context Key"
+            },
+            "limit": {
+              "default": 20,
+              "maximum": 50,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            },
+            "offset": {
+              "default": 0,
+              "maximum": 1000000,
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            },
+            "annotation_type": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "pfam",
+                    "ipr"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Annotation Type"
+            }
+          },
+          "required": [
+            "gene_id"
+          ],
+          "title": "DomainArguments",
+          "type": "object"
+        }
+      },
+      "data_schema": {
+        "$defs": {
+          "EvidenceItem": {
+            "properties": {
+              "raw_fields": {
+                "additionalProperties": {
+                  "type": "string"
+                },
+                "title": "Raw Fields",
+                "type": "object"
+              },
+              "evidence_class": {
+                "title": "Evidence Class",
+                "type": "string"
+              },
+              "lexical_status": {
+                "title": "Lexical Status",
+                "type": "string"
+              },
+              "semantic_status": {
+                "title": "Semantic Status",
+                "type": "string"
+              },
+              "provenance": {
+                "$ref": "#/$defs/Provenance"
+              }
+            },
+            "required": [
+              "raw_fields",
+              "evidence_class",
+              "lexical_status",
+              "semantic_status",
+              "provenance"
+            ],
+            "title": "EvidenceItem",
+            "type": "object"
+          },
+          "Provenance": {
+            "properties": {
+              "source_file_id": {
+                "title": "Source File Id",
+                "type": "integer"
+              },
+              "filename": {
+                "title": "Filename",
+                "type": "string"
+              },
+              "file_sha256": {
+                "title": "File Sha256",
+                "type": "string"
+              },
+              "import_batch_id": {
+                "title": "Import Batch Id",
+                "type": "integer"
+              },
+              "record_no": {
+                "title": "Record No",
+                "type": "integer"
+              },
+              "source_row_id": {
+                "title": "Source Row Id",
+                "type": "string"
+              },
+              "context_key": {
+                "title": "Context Key",
+                "type": "string"
+              },
+              "record_url": {
+                "title": "Record Url",
+                "type": "string"
+              }
+            },
+            "required": [
+              "source_file_id",
+              "filename",
+              "file_sha256",
+              "import_batch_id",
+              "record_no",
+              "source_row_id",
+              "context_key",
+              "record_url"
+            ],
+            "title": "Provenance",
+            "type": "object"
+          }
+        },
+        "properties": {
+          "gene_id": {
+            "title": "Gene Id",
+            "type": "string"
+          },
+          "context_key": {
+            "title": "Context Key",
+            "type": "string"
+          },
+          "total": {
+            "title": "Total",
+            "type": "integer"
+          },
+          "limit": {
+            "title": "Limit",
+            "type": "integer"
+          },
+          "offset": {
+            "title": "Offset",
+            "type": "integer"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/$defs/EvidenceItem"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "source_file_count": {
+            "title": "Source File Count",
+            "type": "integer"
+          },
+          "limitations": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Limitations",
+            "type": "array"
+          }
+        },
+        "required": [
+          "gene_id",
+          "context_key",
+          "total",
+          "limit",
+          "offset",
+          "items",
+          "source_file_count"
+        ],
+        "title": "EvidencePage",
+        "type": "object"
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "get_expression_values",
+        "description": "查询指定原始 sampleID 的 val；单位、组织和处理待确认。",
+        "parameters": {
+          "additionalProperties": false,
+          "properties": {
+            "gene_id": {
+              "pattern": "^CSS[0-9]{7}$",
+              "title": "Gene Id",
+              "type": "string"
+            },
+            "context_key": {
+              "anyOf": [
+                {
+                  "pattern": "^[A-Za-z0-9_.-]{1,128}$",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Context Key"
+            },
+            "limit": {
+              "default": 20,
+              "maximum": 50,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            },
+            "offset": {
+              "default": 0,
+              "maximum": 1000000,
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            },
+            "sample_id": {
+              "description": "原始 sampleID，不能用组织或处理名称代替。",
+              "pattern": "^[A-Za-z0-9_.:-]{1,128}$",
+              "title": "Sample Id",
+              "type": "string"
+            }
+          },
+          "required": [
+            "gene_id",
+            "sample_id"
+          ],
+          "title": "ExpressionArguments",
+          "type": "object"
+        }
+      },
+      "data_schema": {
+        "$defs": {
+          "EvidenceItem": {
+            "properties": {
+              "raw_fields": {
+                "additionalProperties": {
+                  "type": "string"
+                },
+                "title": "Raw Fields",
+                "type": "object"
+              },
+              "evidence_class": {
+                "title": "Evidence Class",
+                "type": "string"
+              },
+              "lexical_status": {
+                "title": "Lexical Status",
+                "type": "string"
+              },
+              "semantic_status": {
+                "title": "Semantic Status",
+                "type": "string"
+              },
+              "provenance": {
+                "$ref": "#/$defs/Provenance"
+              }
+            },
+            "required": [
+              "raw_fields",
+              "evidence_class",
+              "lexical_status",
+              "semantic_status",
+              "provenance"
+            ],
+            "title": "EvidenceItem",
+            "type": "object"
+          },
+          "Provenance": {
+            "properties": {
+              "source_file_id": {
+                "title": "Source File Id",
+                "type": "integer"
+              },
+              "filename": {
+                "title": "Filename",
+                "type": "string"
+              },
+              "file_sha256": {
+                "title": "File Sha256",
+                "type": "string"
+              },
+              "import_batch_id": {
+                "title": "Import Batch Id",
+                "type": "integer"
+              },
+              "record_no": {
+                "title": "Record No",
+                "type": "integer"
+              },
+              "source_row_id": {
+                "title": "Source Row Id",
+                "type": "string"
+              },
+              "context_key": {
+                "title": "Context Key",
+                "type": "string"
+              },
+              "record_url": {
+                "title": "Record Url",
+                "type": "string"
+              }
+            },
+            "required": [
+              "source_file_id",
+              "filename",
+              "file_sha256",
+              "import_batch_id",
+              "record_no",
+              "source_row_id",
+              "context_key",
+              "record_url"
+            ],
+            "title": "Provenance",
+            "type": "object"
+          }
+        },
+        "properties": {
+          "gene_id": {
+            "title": "Gene Id",
+            "type": "string"
+          },
+          "context_key": {
+            "title": "Context Key",
+            "type": "string"
+          },
+          "total": {
+            "title": "Total",
+            "type": "integer"
+          },
+          "limit": {
+            "title": "Limit",
+            "type": "integer"
+          },
+          "offset": {
+            "title": "Offset",
+            "type": "integer"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/$defs/EvidenceItem"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "source_file_count": {
+            "title": "Source File Count",
+            "type": "integer"
+          },
+          "limitations": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Limitations",
+            "type": "array"
+          }
+        },
+        "required": [
+          "gene_id",
+          "context_key",
+          "total",
+          "limit",
+          "offset",
+          "items",
+          "source_file_count"
+        ],
+        "title": "EvidencePage",
+        "type": "object"
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "resolve_gene_identifier",
+        "description": "返回指定命名空间的全部候选映射（分页）；不选择唯一跨材料实体。",
+        "parameters": {
+          "additionalProperties": false,
+          "properties": {
+            "namespace": {
+              "enum": [
+                "SCZV2",
+                "Biyun",
+                "DASZ",
+                "HD",
+                "LJ43",
+                "SCZV1",
+                "TGY",
+                "YK10",
+                "COL",
+                "CCH"
+              ],
+              "title": "Namespace",
+              "type": "string"
+            },
+            "identifier": {
+              "maxLength": 200,
+              "minLength": 1,
+              "title": "Identifier",
+              "type": "string"
+            },
+            "target_namespace": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "SCZV2",
+                    "Biyun",
+                    "DASZ",
+                    "HD",
+                    "LJ43",
+                    "SCZV1",
+                    "TGY",
+                    "YK10",
+                    "COL",
+                    "CCH"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Target Namespace"
+            },
+            "context_key": {
+              "anyOf": [
+                {
+                  "pattern": "^[A-Za-z0-9_.-]{1,128}$",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Context Key"
+            },
+            "limit": {
+              "default": 20,
+              "maximum": 50,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            },
+            "offset": {
+              "default": 0,
+              "maximum": 1000000,
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "namespace",
+            "identifier"
+          ],
+          "title": "IdentifierArguments",
+          "type": "object"
+        }
+      },
+      "data_schema": {
+        "$defs": {
+          "MappingItem": {
+            "properties": {
+              "source_namespace": {
+                "title": "Source Namespace",
+                "type": "string"
+              },
+              "source_identifier": {
+                "title": "Source Identifier",
+                "type": "string"
+              },
+              "target_namespace": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Target Namespace"
+              },
+              "target_identifier": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Target Identifier"
+              },
+              "mapping_semantics": {
+                "title": "Mapping Semantics",
+                "type": "string"
+              },
+              "raw_fields": {
+                "additionalProperties": {
+                  "type": "string"
+                },
+                "title": "Raw Fields",
+                "type": "object"
+              },
+              "provenance": {
+                "additionalProperties": true,
+                "title": "Provenance",
+                "type": "object"
+              }
+            },
+            "required": [
+              "source_namespace",
+              "source_identifier",
+              "target_namespace",
+              "target_identifier",
+              "mapping_semantics",
+              "raw_fields",
+              "provenance"
+            ],
+            "title": "MappingItem",
+            "type": "object"
+          }
+        },
+        "properties": {
+          "total": {
+            "title": "Total",
+            "type": "integer"
+          },
+          "limit": {
+            "title": "Limit",
+            "type": "integer"
+          },
+          "offset": {
+            "title": "Offset",
+            "type": "integer"
+          },
+          "ambiguous": {
+            "title": "Ambiguous",
+            "type": "boolean"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/$defs/MappingItem"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "limitations": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Limitations",
+            "type": "array"
+          }
+        },
+        "required": [
+          "total",
+          "limit",
+          "offset",
+          "ambiguous",
+          "items",
+          "limitations"
+        ],
+        "title": "MappingResult",
+        "type": "object"
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "get_source_evidence",
+        "description": "按文件和数据记录号回查原始证据；大字段省略并明确标记。",
+        "parameters": {
+          "additionalProperties": false,
+          "properties": {
+            "source_file_id": {
+              "minimum": 1,
+              "title": "Source File Id",
+              "type": "integer"
+            },
+            "record_no": {
+              "minimum": 1,
+              "title": "Record No",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "source_file_id",
+            "record_no"
+          ],
+          "title": "SourceArguments",
+          "type": "object"
+        }
+      },
+      "data_schema": {
+        "$defs": {
+          "Provenance": {
+            "properties": {
+              "source_file_id": {
+                "title": "Source File Id",
+                "type": "integer"
+              },
+              "filename": {
+                "title": "Filename",
+                "type": "string"
+              },
+              "file_sha256": {
+                "title": "File Sha256",
+                "type": "string"
+              },
+              "import_batch_id": {
+                "title": "Import Batch Id",
+                "type": "integer"
+              },
+              "record_no": {
+                "title": "Record No",
+                "type": "integer"
+              },
+              "source_row_id": {
+                "title": "Source Row Id",
+                "type": "string"
+              },
+              "context_key": {
+                "title": "Context Key",
+                "type": "string"
+              },
+              "record_url": {
+                "title": "Record Url",
+                "type": "string"
+              }
+            },
+            "required": [
+              "source_file_id",
+              "filename",
+              "file_sha256",
+              "import_batch_id",
+              "record_no",
+              "source_row_id",
+              "context_key",
+              "record_url"
+            ],
+            "title": "Provenance",
+            "type": "object"
+          }
+        },
+        "properties": {
+          "raw_fields": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "title": "Raw Fields",
+            "type": "object"
+          },
+          "evidence_class": {
+            "title": "Evidence Class",
+            "type": "string"
+          },
+          "lexical_status": {
+            "title": "Lexical Status",
+            "type": "string"
+          },
+          "semantic_status": {
+            "title": "Semantic Status",
+            "type": "string"
+          },
+          "provenance": {
+            "$ref": "#/$defs/Provenance"
+          },
+          "source_kind": {
+            "title": "Source Kind",
+            "type": "string"
+          },
+          "omitted_fields": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "title": "Omitted Fields",
+            "type": "array"
+          }
+        },
+        "required": [
+          "raw_fields",
+          "evidence_class",
+          "lexical_status",
+          "semantic_status",
+          "provenance",
+          "source_kind"
+        ],
+        "title": "SourceResult",
+        "type": "object"
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "get_transcription_factors",
+        "description": "查询来源中的 TF/TR 等分类，不推断调控关系。",
+        "parameters": {
+          "additionalProperties": false,
+          "properties": {
+            "gene_id": {
+              "pattern": "^CSS[0-9]{7}$",
+              "title": "Gene Id",
+              "type": "string"
+            },
+            "context_key": {
+              "anyOf": [
+                {
+                  "pattern": "^[A-Za-z0-9_.-]{1,128}$",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Context Key"
+            },
+            "limit": {
+              "default": 20,
+              "maximum": 50,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            },
+            "offset": {
+              "default": 0,
+              "maximum": 1000000,
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "gene_id"
+          ],
+          "title": "GeneArguments",
+          "type": "object"
+        }
+      },
+      "data_schema": {
+        "$defs": {
+          "EvidenceItem": {
+            "properties": {
+              "raw_fields": {
+                "additionalProperties": {
+                  "type": "string"
+                },
+                "title": "Raw Fields",
+                "type": "object"
+              },
+              "evidence_class": {
+                "title": "Evidence Class",
+                "type": "string"
+              },
+              "lexical_status": {
+                "title": "Lexical Status",
+                "type": "string"
+              },
+              "semantic_status": {
+                "title": "Semantic Status",
+                "type": "string"
+              },
+              "provenance": {
+                "$ref": "#/$defs/Provenance"
+              }
+            },
+            "required": [
+              "raw_fields",
+              "evidence_class",
+              "lexical_status",
+              "semantic_status",
+              "provenance"
+            ],
+            "title": "EvidenceItem",
+            "type": "object"
+          },
+          "Provenance": {
+            "properties": {
+              "source_file_id": {
+                "title": "Source File Id",
+                "type": "integer"
+              },
+              "filename": {
+                "title": "Filename",
+                "type": "string"
+              },
+              "file_sha256": {
+                "title": "File Sha256",
+                "type": "string"
+              },
+              "import_batch_id": {
+                "title": "Import Batch Id",
+                "type": "integer"
+              },
+              "record_no": {
+                "title": "Record No",
+                "type": "integer"
+              },
+              "source_row_id": {
+                "title": "Source Row Id",
+                "type": "string"
+              },
+              "context_key": {
+                "title": "Context Key",
+                "type": "string"
+              },
+              "record_url": {
+                "title": "Record Url",
+                "type": "string"
+              }
+            },
+            "required": [
+              "source_file_id",
+              "filename",
+              "file_sha256",
+              "import_batch_id",
+              "record_no",
+              "source_row_id",
+              "context_key",
+              "record_url"
+            ],
+            "title": "Provenance",
+            "type": "object"
+          }
+        },
+        "properties": {
+          "gene_id": {
+            "title": "Gene Id",
+            "type": "string"
+          },
+          "context_key": {
+            "title": "Context Key",
+            "type": "string"
+          },
+          "total": {
+            "title": "Total",
+            "type": "integer"
+          },
+          "limit": {
+            "title": "Limit",
+            "type": "integer"
+          },
+          "offset": {
+            "title": "Offset",
+            "type": "integer"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/$defs/EvidenceItem"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "source_file_count": {
+            "title": "Source File Count",
+            "type": "integer"
+          },
+          "limitations": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Limitations",
+            "type": "array"
+          }
+        },
+        "required": [
+          "gene_id",
+          "context_key",
+          "total",
+          "limit",
+          "offset",
+          "items",
+          "source_file_count"
+        ],
+        "title": "EvidencePage",
+        "type": "object"
+      }
+    }
+  ]
+}

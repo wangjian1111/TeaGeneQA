@@ -1,0 +1,75 @@
+name: teageneqa-v1
+services:
+  db:
+    image: postgres:17
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: teageneqa
+      POSTGRES_DB: teageneqa_dev
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?请在项目 .env 中设置本地开发数据库密码}
+    ports:
+      - "127.0.0.1:${TEAGENEQA_DB_PORT:-55433}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  migrate:
+    build: .
+    environment:
+      DATABASE_URL: postgresql+psycopg://teageneqa:${POSTGRES_PASSWORD:?请设置 POSTGRES_PASSWORD}@db:5432/teageneqa_dev
+    command: ["python", "-m", "alembic", "upgrade", "head"]
+    depends_on:
+      db:
+        condition: service_healthy
+
+  importer:
+    build: .
+    environment:
+      DATABASE_URL: postgresql+psycopg://teageneqa:${POSTGRES_PASSWORD:?请设置 POSTGRES_PASSWORD}@db:5432/teageneqa_dev
+    command: ["python", "-m", "teageneqa.importer", "--manifest", "/app/config/import_manifest.json"]
+    volumes:
+      - ./data/raw:/app/data/raw:ro
+      - ./config:/app/config:ro
+      - import_reports:/app/reports/v1_runtime
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+
+  api:
+    build: .
+    environment:
+      DATABASE_URL: postgresql+psycopg://teageneqa:${POSTGRES_PASSWORD:?请设置 POSTGRES_PASSWORD}@db:5432/teageneqa_dev
+    ports:
+      - "127.0.0.1:${TEAGENEQA_API_PORT:-18000}:8000"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/v1/health', timeout=3)"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    depends_on:
+      importer:
+        condition: service_completed_successfully
+
+  web:
+    build: .
+    environment:
+      TEAGENEQA_API_URL: http://api:8000
+    command: ["python", "-m", "streamlit", "run", "ui/app.py", "--server.address=0.0.0.0", "--server.port=8501", "--browser.gatherUsageStats=false"]
+    ports:
+      - "127.0.0.1:${TEAGENEQA_WEB_PORT:-18501}:8501"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8501/_stcore/health', timeout=3)"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    depends_on:
+      api:
+        condition: service_healthy
+
+volumes:
+  pgdata:
+  import_reports:
